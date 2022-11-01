@@ -1,7 +1,9 @@
 //Service Worker Version
-const version = 1
+const version =  2
 
 const staticCache = `staticCache_${version}`
+const dynamicCache = `dynamicCache${version}`
+
 const staticAssets = [
     './',
     './index.html',
@@ -41,7 +43,16 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request)
               .then(cacheResponse => {
-                 return cacheResponse || fetch(event.request)
+                //If it exists in cache then serve from cache - otherwise make a fetch request to the server
+                 return cacheResponse || fetch(event.request).then(serverReponse => {
+                    //once we get the response from the server lets store it in the dynamic cache by cloning it
+                    return caches.open(dynamicCache)
+                          .then(cache => {
+                            cache.put(event.request, serverReponse.clone())
+                            //Now let's return the response
+                            return serverReponse
+                          })
+                 })
               })            
     )
 })
