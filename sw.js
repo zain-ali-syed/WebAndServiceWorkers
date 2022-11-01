@@ -3,9 +3,12 @@ const version = 1
 
 const staticCache = `staticCache_${version}`
 const staticAssets = [
+    './',
+    './index.html',
     './css/bootstrap.css',
     'https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap',
     'https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJbecnFHGPezSQ.woff2',
+    'https://use.fontawesome.com/releases/v5.6.3/css/all.css',
     './css/style.css',
     './css/responsive.css',
     './js/app.js',
@@ -35,4 +38,10 @@ self.addEventListener('activate', () => {
 //Listen for Fetch event
 self.addEventListener('fetch', (event) => {
     console.log("A fetch event occured: ", event.request.url)
+    event.respondWith(
+        caches.match(event.request)
+              .then(cacheResponse => {
+                 return cacheResponse || fetch(event.request)
+              })            
+    )
 })
