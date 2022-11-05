@@ -34,6 +34,7 @@ function init() {
   })
  }
 
+ //Register our sync event with our Service Worker Registration object
  function backgroundSync(syncEvent) {
     navigator.serviceWorker.ready.then(function(registration) {
       console.log(`Registering a background sync event: ${syncEvent} using our service worker registation object to call sync.register()`)

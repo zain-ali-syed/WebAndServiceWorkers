@@ -93,7 +93,8 @@ self.addEventListener('fetch', (event) => {
 })
 
 
-//Background Sync - When our app come back ONLINE and we have previously registered sync events
+//Background Sync
+//When our app comes back ONLINE and we have previously registered sync events
 //then this sync event listener is called for EACH of the registered sync events
 self.addEventListener('sync', function(event) {
     if (event.tag == 'postMessage') {
