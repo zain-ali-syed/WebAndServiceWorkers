@@ -1,10 +1,10 @@
 //Service Worker Version
-const version =  1
+const version =  7
 
 const staticCache = `staticCache_${version}`
 const dynamicCache = `dynamicCache${version}`
 
-
+const relevantCaches = [staticCache, dynamicCache]
 
 //CORE assets that make up the WEB APPLICATION SHELL 
 // - index page, core css, core javascript files, logos etc
@@ -38,8 +38,23 @@ self.addEventListener('install', (event) => {
 })
 
 //Listen for Activation event
-self.addEventListener('activate', () => {
+self.addEventListener('activate', (event) => {
     console.log("Activation of Service Worker version:", version)
+    //Now the new service worker is activated we can now delete previous
+    //caches made by the previous service worker
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                //This map returns an array of promises and when all are resolved promise.all is reslved and rturns a single
+                //promise to event.waitUntil
+                cacheNames.map(cacheName => {
+                    if (!relevantCaches.includes(cacheName)) {
+                        return caches.delete(cacheName)
+                    }
+                })
+            )
+        })
+    )
 })
 
 //Listen for Fetch event
