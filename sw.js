@@ -1,5 +1,5 @@
 //Service Worker Version
-const version =  7
+const version =  3
 
 const staticCache = `staticCache_${version}`
 const dynamicCache = `dynamicCache${version}`
@@ -21,7 +21,9 @@ const staticAssets = [
     './js/app.js',
     './images/logo.png',
     './images/slide-img.png',
-    './images/search-icon.png'
+    './images/search-icon.png',
+    './404.html',
+    './fallback.html'
 ]
 
 //Listen for Installation event of Service Worker
@@ -59,14 +61,17 @@ self.addEventListener('activate', (event) => {
 
 //Listen for Fetch event
 self.addEventListener('fetch', (event) => {
-    console.log("A fetch event occured: ", event.request.url)
-
     //This allows us to in effect pause the fetch event and respond with ur own custom event
     event.respondWith(
         caches.match(event.request)
               .then(cacheResponse => {
                 //If it exists in cache then serve from cache - otherwise make a fetch request to the server
                  return cacheResponse || fetch(event.request).then(serverReponse => {
+                    //First lets check the server response code
+                    if (serverReponse.status === 404) {
+                        //We and server are online but the page is not found (and the server sends back status 404)
+                        return caches.match('/404.html')
+                    }
                     //once we get the response stream from the server lets store it in the dynamic cache by cloning it
                     return caches.open(dynamicCache)
                           .then(cache => {
@@ -74,6 +79,9 @@ self.addEventListener('fetch', (event) => {
                             //Now let's return the response
                             return serverReponse
                           })
+                 }).catch(() => {
+                    //User is offline and asset has not been cached (or Server is not responding)
+                    return caches.match('/fallback.html')
                  })
               })            
     )
