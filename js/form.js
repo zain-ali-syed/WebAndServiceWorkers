@@ -12,23 +12,25 @@ function init() {
       message: document.getElementById('message').value,
     }
 
+    //(1) We try submitting a messge but unfortunately we are offline so it fails
+    //(2) Backgound Sync allows us to register a named sync event for this failure
+    //(3) When we are BACK online (and we have registered sync events defined prviosuly) then the SYNC event is AUTOMATICALLY called in the SW and we can listen for it
+    // and also determine the coressponding sync event by looking at event.tag
+
     //post blog
     fetch('http://localhost:3000/blog', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json'},
         body: JSON.stringify(messageInfo),
        })
-       .then(res => {
-        console.log("We got server response ", res.clone())
-        return res
-       })
+       .then(res => res)
        .catch((err) => {
-        //Lets call background sync function with the eventTag. So when we are back online the SW is called with the tag 'postMessage'
+
         if(!navigator.onLine) {
           //background sync is only used when user is offline
           backgroundSync('postMessage')
         } else {
-          console.log("Looks like server is down (rather than being offline - background SYNC not available as obviously serverWorker can't know when Server is back online")
+          console.log("Looks like server is down rather than being offline. Background SYNC not available for this scenario - as obviously serviceWorker can't know when Server is back online")
         }
     })
   })
@@ -38,7 +40,7 @@ function init() {
  function backgroundSync(syncEvent) {
     navigator.serviceWorker.ready.then(function(registration) {
       console.log(`Registering a background sync event: ${syncEvent} using our service worker registation object to call sync.register()`)
-      console.log("When next online this syncEvent is fired and we can hear it in the 'sync' event in our SW")
+      console.log("When we are back online this syncEvent is fired and we can hear it in the 'sync' event in our SW")
       return registration.sync.register(syncEvent);
     })
 }
