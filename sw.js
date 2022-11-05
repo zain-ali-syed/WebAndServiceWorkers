@@ -1,5 +1,5 @@
 //Service Worker Version
-const version =  3
+const version =  14
 
 const staticCache = `staticCache_${version}`
 const dynamicCache = `dynamicCache${version}`
@@ -23,7 +23,8 @@ const staticAssets = [
     './images/slide-img.png',
     './images/search-icon.png',
     './404.html',
-    './fallback.html'
+    './fallback.html',
+    './images/placeholder.jpeg'
 ]
 
 //Listen for Installation event of Service Worker
@@ -31,7 +32,10 @@ self.addEventListener('install', (event) => {
     
     console.log("Installation of Service Worker version:", version)
     console.log(`Open cache ${staticCache} and store core static assets`)
-
+  
+   // The install events in service workers use waitUntil() to hold the service worker in the installing phase until tasks complete (as the service worlr is always trying to shut down to save resources). 
+   //If the promise passed to waitUntil() rejects, the install is considered a failure, and the installing service worker is discarded. 
+   //This is primarily used to ensure that a service worker is not considered installed until all of the core caches it depends on are successfully populated.
     event.waitUntil(
         caches.open(staticCache)
               .then(cache => { cache.addAll(staticAssets).then(() => console.log("assets added")) })
@@ -67,10 +71,11 @@ self.addEventListener('fetch', (event) => {
               .then(cacheResponse => {
                 //If it exists in cache then serve from cache - otherwise make a fetch request to the server
                  return cacheResponse || fetch(event.request).then(serverReponse => {
-                    //First lets check the server response code
+
                     if (serverReponse.status === 404) {
                         //We and server are online but the page is not found (and the server sends back status 404)
-                        return caches.match('/404.html')
+                        if(event.request.url.match(/html/)) return caches.match('/404.html')
+                        if(event.request.url.match(/jpeg|png|gif/)) return caches.match('/images/placeholder.jpeg')
                     }
                     //once we get the response stream from the server lets store it in the dynamic cache by cloning it
                     return caches.open(dynamicCache)
@@ -81,7 +86,7 @@ self.addEventListener('fetch', (event) => {
                           })
                  }).catch(() => {
                     //User is offline and asset has not been cached (or Server is not responding)
-                    return caches.match('/fallback.html')
+                    if(event.request.url.match(/html/)) return caches.match('/fallback.html')
                  })
               })            
     )
