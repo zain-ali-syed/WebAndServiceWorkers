@@ -1,14 +1,10 @@
 //Service Worker Version
-const version =  9
+const version =  2
 
 const staticCache = `staticCache_${version}`
-const dynamicCache = `dynamicCache${version}`
 
-const relevantCaches = [staticCache, dynamicCache]
+const relevantCaches = [staticCache]
 
-//CORE assets that make up the WEB APPLICATION SHELL 
-// - index page, core css, core javascript files, logos etc
-// List of all the asset requests that we want to PRECACHE
 const staticAssets = [
     './',
     './index.html',
@@ -65,29 +61,10 @@ self.addEventListener('activate', (event) => {
 
 //Listen for Fetch event
 self.addEventListener('fetch', (event) => {
-    //This allows us to in effect pause the fetch event and respond with ur own custom event
     event.respondWith(
         caches.match(event.request)
               .then(cacheResponse => {
-                //If it exists in cache then serve from cache - otherwise make a fetch request to the server
-                 return cacheResponse || fetch(event.request).then(serverReponse => {
-
-                    if (serverReponse.status === 404) {
-                        //We and server are online but the page is not found (and the server sends back status 404)
-                        if(event.request.url.match(/html/)) return caches.match('/404.html')
-                        if(event.request.url.match(/jpeg|png|gif/)) return caches.match('/images/placeholder.jpeg')
-                    }
-                    //once we get the response stream from the server lets store it in the dynamic cache by cloning it
-                    return caches.open(dynamicCache)
-                          .then(cache => {
-                            cache.put(event.request, serverReponse.clone())
-                            //Now let's return the response
-                            return serverReponse
-                          })
-                 }).catch(() => {
-                    //User is offline and asset has not been cached (or Server is not responding)
-                    if(event.request.url.match(/html/)) return caches.match('/fallback.html')
-                 })
+                 return cacheResponse || fetch(event.request)
               })            
     )
 })
@@ -97,9 +74,29 @@ self.addEventListener('fetch', (event) => {
 //When our app comes back ONLINE and we have previously registered sync events
 //then this sync event listener is called for EACH of the registered sync events
 self.addEventListener('sync', function(event) {
+    console.log("------------BACK ONLINE SYNC EVENT-----------------")
+    console.log("Lets send the saved message to the server now")
     if (event.tag == 'postMessage') {
-        console.log("------------BACK ONLINE-----------------")
-        console.log("Sync event ", event.tag)
-        console.log("Now let's post our message")
+        autoPostMessageToServer()
     }
 });
+
+function autoPostMessageToServer() {
+    console.log()
+    //IMAGINE SOME CODE HERE WHICH GETS THE SAVED MESSAGE FROM THE DB AND RETURNS....
+    const messageInfo = {
+        id: 1667740139400,
+        name: 'Zain',
+        phone: '111',
+        email: 'zain@hotmail.com',
+        message: 'This is my auto sent message got from DB'
+      }
+
+    fetch('http://localhost:3000/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify(messageInfo),
+       })
+       .then(() => console.log("Message was automatically sent to server successfully"))
+       .catch(() => Promise.reject())
+}
