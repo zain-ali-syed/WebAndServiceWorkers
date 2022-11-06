@@ -1,5 +1,8 @@
+import { openDB, getData } from "./js/database.js";
+
+
 //Service Worker Version
-const version =  9
+const version =  32
 
 const staticCache = `staticCache_${version}`
 const dynamicCache = `dynamicCache${version}`
@@ -64,32 +67,40 @@ self.addEventListener('activate', (event) => {
 })
 
 //Listen for Fetch event
-self.addEventListener('fetch', (event) => {
-    //This allows us to in effect pause the fetch event and respond with ur own custom event
-    event.respondWith(
-        caches.match(event.request)
-              .then(cacheResponse => {
-                //If it exists in cache then serve from cache - otherwise make a fetch request to the server
-                 return cacheResponse || fetch(event.request).then(serverReponse => {
+self.addEventListener('fetch', event => {
+    if(event.request.method === 'POST') {
+        //pass through do nothing
+        console.log("PASS through post")
+        event.respondWith(fetch(event.request))
+    } else {
+        //This allows us to in effect pause the fetch event and respond with ur own custom event
+        event.respondWith(
+            caches.match(event.request)
+                .then(cacheResponse => {
+                    //If it exists in cache then serve from cache - otherwise make a fetch request to the server
+                    return cacheResponse || fetch(event.request).then(serverReponse => {
 
-                    if (serverReponse.status === 404) {
-                        //We and server are online but the page is not found (and the server sends back status 404)
-                        if(event.request.url.match(/html/)) return caches.match('/404.html')
-                        if(event.request.url.match(/jpeg|png|gif/)) return caches.match('/images/placeholder.jpeg')
-                    }
-                    //once we get the response stream from the server lets store it in the dynamic cache by cloning it
-                    return caches.open(dynamicCache)
-                          .then(cache => {
-                            cache.put(event.request, serverReponse.clone())
-                            //Now let's return the response
-                            return serverReponse
-                          })
-                 }).catch(() => {
-                    //User is offline and asset has not been cached (or Server is not responding)
-                    if(event.request.url.match(/html/)) return caches.match('/fallback.html')
-                 })
-              })            
-    )
+                        if (serverReponse.status === 404) {
+                            //We and server are online but the page is not found (and the server sends back status 404)
+                            if(event.request.url.match(/html/)) return caches.match('/404.html')
+                            if(event.request.url.match(/jpeg|png|gif/)) return caches.match('/images/placeholder.jpeg')
+                        }
+                        //once we get the response stream from the server lets store it in the dynamic cache by cloning it
+                        return caches.open(dynamicCache)
+                            .then(cache => {
+                                cache.put(event.request, serverReponse.clone())
+                                //Now let's return the response
+                                return serverReponse
+                            })
+                    }).catch(() => {
+                        console.log("User is offline man")
+                        //User is offline and asset has not been cached (or Server is not responding)
+                        if(event.request.url.match(/html/)) return caches.match('/fallback.html')
+                    })
+                })            
+         )
+    }
+   
 })
 
 
@@ -100,6 +111,22 @@ self.addEventListener('sync', function(event) {
     if (event.tag == 'postMessage') {
         console.log("------------BACK ONLINE-----------------")
         console.log("Sync event ", event.tag)
-        console.log("Now let's post our message")
+        console.log("Now let's get our stored message from the DB and post our message to the server")
+        event.waitUntil(
+            openDB()
+             .then(getData)
+             .then(data => sendMessageToServer(data))
+             .then(response => response.json())
+             .then(data => console.log('Response from server - we received the message:', data))
+        )
     }
 });
+
+function sendMessageToServer (data) {
+    console.log("Sending data to server......... ", data)
+    return fetch('http://localhost:3000/message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify(data),
+     })
+  }

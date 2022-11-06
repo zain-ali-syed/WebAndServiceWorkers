@@ -14,9 +14,13 @@
 
   <title>Tropiko</title>
 
+  <!-- slider stylesheet -->
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
 
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
   <!-- fonts style -->
   <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet" />
   <!-- Custom styles for this template -->
@@ -26,7 +30,8 @@
 </head>
 
 <body>
-  <div class="hero_area">
+  <div class="hero_area sub_pages">
+    <!-- header section strats -->
     <header class="header_section">
       <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container pt-3">
@@ -55,9 +60,6 @@
                 <li class="nav-item">
                   <a class="nav-link" href="contact.html">Contact us</a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="thispagedoesnotexist.html">Some Link</a>
-                </li>
               </ul>
               <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
                 <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
@@ -72,52 +74,55 @@
         </nav>
       </div>
     </header>
-    <section class=" slider_section position-relative">
-       <div class="container">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="slider_item-detail">
-                        <div>
-                          <h1>
-                            Welcome to <br />
-                            Our Fruits Shop Updated
-                          </h1>
-                          <p>
-                            There are many variations of passages of Lorem
-                            Ipsum available, but the majority have suffered
-                            alteration in some form, by injected humour, or
-                            randomised words which don't look even slightly
-                            believable.
-                          </p>
-                          <div class="d-flex">
-                            <a href="" class="text-uppercase custom_orange-btn mr-3">
-                              Shop Now
-                            </a>
-                            <a href="" class="text-uppercase custom_dark-btn">
-                              Contact Us
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="slider_img-box">
-                        <div>
-                          <img src="images/slide-img.png" alt="" class="" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-        </div>
-    </section>
+    <!-- end header section -->
+
   </div>
 
+
+
+  <!-- contact section -->
+  <section class="contact_section layout_padding">
+    <div class="container">
+      <main>
+        <p>This example is using plain vanilla JS and core indexedDB methods.</p>
+        <p>
+          If you are familiar with document databases like MongoDB, you can think
+          of an ObjectStore as a collection.
+        </p>
+        <p>The Core Object and Interfaces are:</p>
+        <ul>
+          <li>
+            <code>window.indexedDB</code> The database object holds Object Stores (Collections, Tables)
+          </li>
+          <li>
+            <code>IDBObjectStore</code> An Object Store inside a database. (A
+            Collection of objects, A table of rows)
+          </li>
+          <li>
+            <code>IDBRequest</code> A request object for add, put, delete, etc.
+          </li>
+          <li><code>IDBTransaction</code> A wrapper around requests.</li>
+          <li><code>IDBIndex</code> An index added to an Object Store (think Primary key column)</li>
+          <li>
+            <code>IDBCursor</code> To track current position inside the results of
+            a request.
+          </li>
+          <li><code>IDBKeyRange</code> A range of values for matching a key.</li>
+        </ul>
+    </div>
+  </section>
+  <!-- end contact section -->
+
+  <!-- footer section -->
   <section class="container-fluid footer_section">
     <p>
       Copyright &copy; 2019 All Rights Reserved By
       <a href="https://html.design/">Free Html Templates</a>
     </p>
   </section>
-  <script type="module" src="./js/app.js"></script>
+  <!-- footer section -->
 </body>
+<script src="./js/form.js"></script>
+<script type="module" src="./js/app.js"></script>
+
 </html>
