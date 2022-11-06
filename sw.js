@@ -15,3 +15,8 @@ self.addEventListener('activate', () => {
 self.addEventListener('fetch', (event) => {
     console.log("A fetch event occured: ", event.request.url)
 })
+
+//Listen for Background sync event
+self.addEventListener('sync', (event) => {
+    console.log(`Back Online: A background sync event happened for ${event.target}`)
+})
