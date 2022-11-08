@@ -14,7 +14,7 @@ const staticAssets = [
   './js/app.js',
   './images/logo.png',
   './images/slide-img.png',
-  './images/search-icon.png',
+  './images/search-icon.png'
 ]
 
 //Listen for Installation event of Service Worker
