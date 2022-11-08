@@ -8,7 +8,7 @@ function init() {
       name: document.getElementById('name').value,
       phone: document.getElementById('phone').value,
       email: document.getElementById('email').value,
-      message: document.getElementById('message').value,
+      message: document.getElementById('message').value
     }
 
     //(1) We try submitting a messge but unfortunately we are offline so it fails
@@ -20,7 +20,7 @@ function init() {
     fetch('http://localhost:3000/message', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(messageInfo),
+      body: JSON.stringify(messageInfo)
     })
       .then(() => console.log('Message sent to server...'))
       .catch((err) => {
@@ -51,9 +51,7 @@ function registerBackgroundSync(syncEvent) {
     console.log(
       `Registering a background sync event: ${syncEvent} using our service worker registation object to call sync.register()`
     )
-    console.log(
-      "When we are back online this syncEvent is fired and we can hear it in the 'sync' event in our SW"
-    )
+    console.log("When we are back online this syncEvent is fired and we can hear it in the 'sync' event in our SW")
     return registration.sync.register(syncEvent)
   })
 }

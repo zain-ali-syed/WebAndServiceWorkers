@@ -20,7 +20,7 @@ const staticAssets = [
   './images/search-icon.png',
   './404.html',
   './fallback.html',
-  './images/placeholder.jpeg',
+  './images/placeholder.jpeg'
 ]
 
 //Listen for Installation event of Service Worker
@@ -89,16 +89,14 @@ function autoPostMessageToServer() {
     name: 'Zain',
     phone: '111',
     email: 'zain@hotmail.com',
-    message: 'This is my auto sent message got from DB',
+    message: 'This is my auto sent message got from DB'
   }
 
   fetch('http://localhost:3000/message', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(messageInfo),
+    body: JSON.stringify(messageInfo)
   })
-    .then(() =>
-      console.log('Message was automatically sent to server successfully')
-    )
+    .then(() => console.log('Message was automatically sent to server successfully'))
     .catch(() => Promise.reject())
 }
