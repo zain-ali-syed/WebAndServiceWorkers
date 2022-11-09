@@ -40,7 +40,7 @@ function init() {
       // if number greater than 1 and not divisible by other numbers
       if (i > 1 && flag == 0) {
         primeNumbers.push(i)
-        console.log('Found prime ', i)
+        console.log('Found prime: ', i)
       }
     }
     console.log(`The prime numbers between ${lowerNumber} and ${higherNumber} are: `, primeNumbers)
