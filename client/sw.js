@@ -15,7 +15,7 @@ self.addEventListener('activate', (event) => {
 
 //Listen for Fetch events from the application
 self.addEventListener('fetch', (event) => {
-  console.log('Fetch event for ', event.request.url)
+  //console.log('Fetch event for ', event.request.url)
   //Listen for network requests here and decide where to serve from (cache or server)
 })
 

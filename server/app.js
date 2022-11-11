@@ -4,15 +4,12 @@ const webpush = require('web-push')
 const bodyParser = require('body-parser')
 let subscriptionObject
 
-const publicVapidKey =
-  'BCFoABtp96wytEl2blENd36-Qhb6_iUB8w337E-y0Fu7HK3h5OzkCbPTji2QTkcgDtfcSRdsAN_RrcP-1FwHf28'
+//./node_modules/.bin/web-push generate-vapid-keys
+// VAPID keys should be generated only once.
+const publicVapidKey = 'BCFoABtp96wytEl2blENd36-Qhb6_iUB8w337E-y0Fu7HK3h5OzkCbPTji2QTkcgDtfcSRdsAN_RrcP-1FwHf28'
 const privateVapidKey = 'v1Y5Y79nteO6wAzpBTNbsBHLmRUrWAgifq665-RYhdE'
 
-webpush.setVapidDetails(
-  'mailto:test@test123.com',
-  publicVapidKey,
-  privateVapidKey
-)
+webpush.setVapidDetails('mailto:test@test123.com', publicVapidKey, privateVapidKey)
 
 const app = express()
 app.use(cors({ origin: '*' }))
@@ -28,9 +25,7 @@ app.get('/', (req, res) => {
 
 app.post('/subscribe', (req, res) => {
   subscriptionObject = req.body
-  console.log(
-    `Server: Recieved subscription object for a user - now lets put in DB`
-  )
+  console.log(`Server: Recieved subscription object for a user - now lets put in DB`)
   console.log(subscriptionObject)
 
   //IMAGINE SOME CODE TO ADD SUBSCRIPTION TO DB HERE....
@@ -42,7 +37,7 @@ app.post('/subscribe', (req, res) => {
 app.get('/sendPushNotification', (req, res) => {
   const payload = JSON.stringify({
     title: 'Push Test',
-    message: 'A Sale is now on!! Get 50% off!!',
+    message: 'A Sale is now on!! Get 50% off!!'
   })
   console.log('Send push notification.... ')
   console.log(subscriptionObject)
