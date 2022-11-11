@@ -16,10 +16,7 @@ function init() {
 
     // Use serviceWorker.ready to ensure that you can subscribe for push
     navigator.serviceWorker.ready.then((registration) => {
-      registration.pushManager
-        .subscribe(options)
-        .then((pushSubscription) => sendSubscriptionObjectToServer(pushSubscription))
-        .catch((err) => console.log('There was an error ', err))
+      //use pushManager to send pushSubscription to server
     })
   } else {
     console.log('Sorry this browser does not support Service Workers')

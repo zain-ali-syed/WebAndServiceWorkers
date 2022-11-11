@@ -31,9 +31,4 @@ self.addEventListener('sync', (event) => {
 self.addEventListener('push', (event) => {
   console.log('Recieved push notification from Push Service')
   //Notifications sent from server e.g 50% off sale!!!
-  const data = event.data.json()
-  self.registration.showNotification(data.title, {
-    body: data.message,
-    icon: 'http://image.ibb.co/frYOFd/tmlogo.png'
-  })
 })
