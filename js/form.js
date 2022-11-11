@@ -24,11 +24,11 @@ function init() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(messageInfo)
     })
-      .then(() => console.log('Message sent to server...'))
+      .then((res) => console.log('Message from server... ', res.status))
       .catch((err) => {
         if (!navigator.onLine) {
           console.log('we are OFFLINE SEND MESSAGE LATER')
-          registerBackgroundSync('postMessage')
+          //registerBackgroundSync('postMessage')
         } else {
           console.log('Looks like server is down rather than being offline.')
         }
@@ -37,13 +37,13 @@ function init() {
 }
 
 // Register our sync event with our Service Worker Registration object
-function registerBackgroundSync(syncEvent) {
-  console.log('Register sync event')
-  navigator.serviceWorker.ready
-    .then((registration) => {
-      return registration.sync.register(syncEvent)
-    })
-    .catch((err) => console.log('error registering sync event'))
-}
+// function registerBackgroundSync(syncEvent) {
+//   console.log('Register sync event')
+//   navigator.serviceWorker.ready
+//     .then((registration) => {
+//       return registration.sync.register(syncEvent)
+//     })
+//     .catch((err) => console.log('error registering sync event'))
+// }
 
 document.addEventListener('DOMContentLoaded', init)

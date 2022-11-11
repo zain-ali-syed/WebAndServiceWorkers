@@ -1,0 +1,26 @@
+{
+  "name": "web_and_service_workers",
+  "version": "1.0.0",
+  "description": "<span style=\"color:yellow\">LESSON 1:</span> Register Service Worker and Add event listeners for lifecycle events",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zain-ali-syed/WebAndServiceWorkers.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zain-ali-syed/WebAndServiceWorkers/issues"
+  },
+  "homepage": "https://github.com/zain-ali-syed/WebAndServiceWorkers#readme",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  }
+}
