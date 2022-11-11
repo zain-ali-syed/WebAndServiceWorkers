@@ -95,3 +95,37 @@ self.addEventListener('fetch', (event) => {
     })
   )
 })
+
+//Background Sync
+//When our app comes back ONLINE and we have previously registered sync events
+//then this sync event listener is called for EACH of the registered sync events
+self.addEventListener('sync', function (event) {
+  console.log('------------BACK ONLINE SYNC EVENT-----------------')
+  console.log('Lets send the saved message to the server now')
+  if (event.tag == 'postMessage') {
+    event.waitUntil(
+      autoPostMessageToServer()
+        .then(() => {
+          console.log('sent to server')
+        })
+        .catch((err) => console.log('There was an error ', err))
+    )
+  }
+})
+
+function autoPostMessageToServer() {
+  //IMAGINE SOME CODE HERE WHICH GETS THE SAVED MESSAGE FROM THE DB AND RETURNS....
+  const messageInfo = {
+    id: 1667740139400,
+    name: 'Zain',
+    phone: '111',
+    email: 'zain@hotmail.com',
+    message: 'This is my auto sent message got from DB'
+  }
+
+  return fetch('http://localhost:3000/message', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(messageInfo)
+  })
+}
